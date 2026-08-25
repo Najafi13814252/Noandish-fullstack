@@ -8,11 +8,16 @@ datasource db {
 }
 
 model User {
-  userId    String  @unique
+  userId    String  @id
   email     String  @unique
   username  String
   password  String
   firstName String?
   lastName  String?
-  name      String?
+  role      Role    @default(USER)
+}
+
+enum Role {
+  USER
+  ADMIN
 }
