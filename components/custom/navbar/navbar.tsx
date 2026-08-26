@@ -8,10 +8,13 @@ import { LogIn, ShoppingBag03Icon } from "@hugeicons/core-free-icons"
 import { ModeToggle } from "../mode-toggle"
 import Logo from "./logo"
 import Categories from "./categories"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import Register from "../auth/register"
+
 
 function Navbar() {
     return (
-        <header className="sticky top-0 flex items-center justify-between py-2 px-10 border-b border-b-gray-300 dark:border-b-gray-800">
+        <header className="sticky top-0 z-50 flex items-center justify-between px-10 border-b border-b-gray-300 dark:border-b-gray-800 bg-background">
             <section className="flex items-center gap-x-6">
                 {/* لوگو */}
                 <Logo />
@@ -29,10 +32,17 @@ function Navbar() {
                     </Button>
                 </Link>
 
-                <Button size="lg" className="dark:bg-primary/10">
-                    <HugeiconsIcon icon={LogIn} className="size-5 rotate-180" />
-                    ورود | ثبت‌نام
-                </Button>
+                <Dialog>
+                    <DialogTrigger render={
+                        <Button size="lg" className="dark:bg-primary/10">
+                            <HugeiconsIcon icon={LogIn} className="size-5 rotate-180" />
+                            ورود | ثبت‌نام
+                        </Button>
+                    } />
+                    <DialogContent>
+                        <Register />
+                    </DialogContent>
+                </Dialog>
             </section>
         </header>
     )

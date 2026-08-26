@@ -1,3 +1,4 @@
+import Footer from "@/components/custom/footer"
 import Navbar from "@/components/custom/navbar/navbar"
 
 function HomeLayout({ children }: LayoutProps<"/">) {
@@ -5,6 +6,7 @@ function HomeLayout({ children }: LayoutProps<"/">) {
         <div className="">
             <Navbar />
             {children}
+            <Footer />
         </div>
     )
 }
