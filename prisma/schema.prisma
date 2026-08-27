@@ -21,3 +21,69 @@ enum Role {
   USER
   ADMIN
 }
+
+model Teacher {
+  id       Int      @id @default(autoincrement())
+  name     String
+  role     String
+  avatar   String   @default("/images/person.webp")
+  bio      String   @db.Text
+  students Int      @default(0)
+  courses  Int      @default(0)
+  rating   Float    @default(0)
+  Course   Course[]
+}
+
+model Course {
+  id              Int       @id @default(autoincrement())
+  src             String
+  title           String
+  price           Int
+  rate            Float     @default(0)
+  lesson          Int       @default(0)
+  members         Int       @default(0)
+  duration        Int       @default(0)
+  discount        Int       @default(0)
+  description     String    @db.Text
+  fullDescription Json
+  prerequisites   Json
+  language        String    @default("فارسی")
+  teacherId       Int
+  teacher         Teacher   @relation(fields: [teacherId], references: [id])
+  chapters        Chapter[]
+  reviews         Review[]
+
+  @@index([teacherId])
+}
+
+model Chapter {
+  id       Int      @id @default(autoincrement())
+  title    String
+  courseId Int
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons  Lesson[]
+
+  @@index([courseId])
+}
+
+model Lesson {
+  id        Int     @id @default(autoincrement())
+  title     String
+  duration  String
+  chapterId Int
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@index([chapterId])
+}
+
+model Review {
+  id       Int    @id @default(autoincrement())
+  name     String
+  rating   Int
+  date     String
+  comment  String @db.Text
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+}

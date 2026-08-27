@@ -5,10 +5,12 @@ import { HugeiconsIcon } from "@hugeicons/react"
 
 import Image from "next/image"
 
+import MobileFooter from "./mobile-footer"
+
 function Footer() {
     return (
         <>
-            <footer className="bg-primary pt-10 pb-20 my-10 md:my-0 dark:bg-gray-800">
+            <footer className="bg-primary pt-10 pb-20 dark:bg-gray-800">
                 <div className="w-fit mx-4 lg:pr-20">
                     <div className="flex flex-col lg:flex-row gap-16 lg:gap-36 items-center text-gray-100">
                         {/* introduction */}
@@ -75,8 +77,8 @@ function Footer() {
                 </div >
             </footer>
 
-            {/* mobile footer */}
-            {/* <MobileFooter /> */}
+            {/* فوتر موبایل به صورت tab bar */}
+            <MobileFooter />
         </>
     )
 }

@@ -4,9 +4,14 @@ import Image from 'next/image';
 import { useState } from 'react';
 import LoginForm from './login-form';
 import SignupForm from './signup-form';
+import GoogleButton from './google-button';
 
 
-function Register() {
+type RegisterProps = {
+    onSuccess?: () => void;
+};
+
+function Register({ onSuccess }: RegisterProps) {
     const [mode, setMode] = useState<'login' | 'signup'>('login');
 
     const description = mode === 'login'
@@ -35,10 +40,18 @@ function Register() {
             </div>
 
             {mode === 'login' ? (
-                <LoginForm />
+                <LoginForm onSuccess={onSuccess} />
             ) : (
-                <SignupForm />
+                <SignupForm onSuccess={onSuccess} />
             )}
+
+            <div className="flex items-center gap-3 w-full my-4">
+                <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+                <span className="text-xs text-gray-400 dark:text-gray-500">یا</span>
+                <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+            </div>
+
+            <GoogleButton />
 
             <button
                 className="mt-4 text-sm text-gray-800 hover:text-sky-600 duration-200 cursor-pointer dark:text-white inline-block"

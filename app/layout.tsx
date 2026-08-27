@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/custom/theme-provider";
+import { Toaster } from "react-hot-toast";
 
 const arad = localFont({
   src: [
@@ -64,13 +65,32 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body>
         <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           <ClerkProvider>
             {children}
+
+            <Toaster toastOptions={{
+              success: {
+                duration: 4000,
+                style: {
+                  border: 'solid 1px oklch(76.8% 0.233 130.85)',
+                  color: 'oklch(76.8% 0.233 130.85)',
+                  backgroundColor: '#f7fee7'
+                }
+              },
+              error: {
+                duration: 4000,
+                style: {
+                  border: 'solid 1px #fb2c36',
+                  color: '#fb2c36',
+                  backgroundColor: '#fef2f2'
+                }
+              }
+            }} />
           </ClerkProvider>
         </ThemeProvider>
       </body>

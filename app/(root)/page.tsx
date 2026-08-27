@@ -6,7 +6,7 @@ import Introduction from "./_components/introduction";
 
 export default function Home() {
   return (
-    <div className="space-y-20 pb-20">
+    <div className="space-y-12 md:space-y-20">
       <Hero />
 
       <CardSlider title="محبوب" courses={cards}/>
