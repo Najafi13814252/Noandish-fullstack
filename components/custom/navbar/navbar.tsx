@@ -5,13 +5,16 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ShoppingBag03Icon } from "@hugeicons/core-free-icons"
+import { DashboardCircleSettingsIcon, ShoppingBag03Icon } from "@hugeicons/core-free-icons"
 
 import { ModeToggle } from "../mode-toggle"
 import Logo from "./logo"
 import Categories from "./categories"
 import LoginDialog from "../auth/login-dialog"
-import { Show, UserButton } from "@clerk/nextjs";
+import { Show } from "@clerk/nextjs";
+import UserProfile from "./user-profile";
+import RoleGuard from "../role-guard";
+
 
 
 function Navbar() {
@@ -42,12 +45,21 @@ function Navbar() {
                         <LoginDialog />
                     </div>
                 </Show>
-
                 <Show when="signed-in">
                     <div className="hidden md:block">
-                        <UserButton />
+                        <UserProfile />
                     </div>
                 </Show>
+
+                {/* admin button */}
+                <RoleGuard allow={['admin']}>
+                    <Link href="#" className="hidden md:block">
+                        <Button size="lg" variant="outline" className="border border-primary/50 text-primary">
+                            <HugeiconsIcon icon={DashboardCircleSettingsIcon} className="size-6! text-primary" />
+                            پنل ادمین
+                        </Button>
+                    </Link>
+                </RoleGuard>
             </section>
         </header>
     )
