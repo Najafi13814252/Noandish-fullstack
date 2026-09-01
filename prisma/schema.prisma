@@ -8,9 +8,8 @@ datasource db {
 }
 
 model Teacher {
-  id       Int      @id @default(autoincrement())
+  id       String   @id @default(uuid())
   name     String
-  role     String
   avatar   String   @default("/images/person.webp")
   bio      String   @db.Text
   students Int      @default(0)
@@ -20,8 +19,8 @@ model Teacher {
 }
 
 model Course {
-  id              Int       @id @default(autoincrement())
-  src             String
+  id              String    @id @default(uuid())
+  imageUrl        String
   title           String
   price           Int
   rate            Float     @default(0)
@@ -29,22 +28,25 @@ model Course {
   members         Int       @default(0)
   duration        Int       @default(0)
   discount        Int       @default(0)
-  description     String    @db.Text
-  fullDescription Json
-  prerequisites   Json
+  description     String?   @db.Text
+  fullDescription String?   @db.Text
+  prerequisites   String?   @db.Text
   language        String    @default("فارسی")
-  teacherId       Int
+  createdAt       DateTime  @default(now())
+  teacherId       String
   teacher         Teacher   @relation(fields: [teacherId], references: [id])
   chapters        Chapter[]
   reviews         Review[]
+  wishlists       Wishlist[]
+  cartItems       CartItem[]
 
   @@index([teacherId])
 }
 
 model Chapter {
-  id       Int      @id @default(autoincrement())
+  id       String   @id @default(uuid())
   title    String
-  courseId Int
+  courseId String
   course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   lessons  Lesson[]
 
@@ -52,23 +54,76 @@ model Chapter {
 }
 
 model Lesson {
-  id        Int     @id @default(autoincrement())
-  title     String
-  duration  String
-  chapterId Int
-  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  id             String         @id @default(uuid())
+  title          String
+  duration       String?
+  videoUrl       String?        @db.Text
+  posterUrl      String?        @db.Text
+  isLock         Boolean        @default(false)
+  chapterId      String
+  chapter        Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  
+  userProgresses UserProgress[]
 
   @@index([chapterId])
 }
 
+model UserProgress {
+  id     String @id @default(uuid())
+  userId String @db.VarChar(100)
+
+  lessonId String @db.VarChar(100)
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  isComplated Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+
+  @@unique([userId, lessonId])
+  @@index([lessonId])
+}
+
 model Review {
-  id       Int    @id @default(autoincrement())
+  id       String @id @default(uuid())
   name     String
   rating   Int
   date     String
   comment  String @db.Text
-  courseId Int
+  courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
+  @@index([courseId])
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String   @db.VarChar(100)
+  courseId  String   @db.VarChar(100)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique @db.VarChar(100)
+  createdAt DateTime   @default(now())
+
+  items CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String   @db.VarChar(100)
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  courseId  String   @db.VarChar(100)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, courseId])
+  @@index([cartId])
   @@index([courseId])
 }

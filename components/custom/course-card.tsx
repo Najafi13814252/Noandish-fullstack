@@ -1,5 +1,3 @@
-import { courseType } from "@/fake-data/courses"
-
 import { Card } from "../ui/card"
 
 import { BookOpen, Clock, GraduationCapIcon, Star } from "@hugeicons/core-free-icons"
@@ -7,14 +5,26 @@ import { HugeiconsIcon } from "@hugeicons/react"
 
 import Image from "next/image"
 import Link from "next/link"
+import { Course } from "@/generated/prisma/client"
 
-function CourseCard({ id, src, title, discount, price, teacher, rate, duration, lesson, members }: courseType) {
+import WishlistButton from "./wishlist-button"
+
+type CourseCardProps = Course & {
+    /** آیا دوره در علاقه‌مندی‌های کاربر واردشده هست (از سرور می‌آید) */
+    isWishlisted?: boolean
+    /** نام معلم؛ وقتی از سرور همراه رابطهٔ teacher می‌آید */
+    teacherName?: string
+    /** آواتار معلم؛ وقتی از سرور همراه رابطهٔ teacher می‌آید */
+    teacherAvatar?: string
+}
+
+function CourseCard({ id, imageUrl, title, discount, price, rate, duration, lesson, members, isWishlisted = false, teacherName, teacherAvatar }: CourseCardProps) {
     return (
         <Card className="flex flex-col relative gap-2 border bg-white border-teal-200 shadow-md shadow-teal-200 p-3 cursor-pointer transform transition-transform duration-200 hover:scale-105 dark:bg-gray-800 dark:border-gray-700 dark:shadow-none">
 
             {/* عکس دوره */}
             <Link href={`/courses/${id}`}>
-                <Image src={src || '/images/img-1.webp'} width={400} height={250} className="w-full h-40 object-cover rounded-xl" loading="lazy" alt="Course_Image" />
+                <Image src={imageUrl || '/images/img-1.webp'} width={400} height={250} className="w-full h-40 object-cover rounded-xl" loading="lazy" alt="Course_Image" />
             </Link>
 
 
@@ -25,11 +35,7 @@ function CourseCard({ id, src, title, discount, price, teacher, rate, duration, 
                     <Link href={`/courses/${id}`}>
                         <p className="text-lg font-bold text-gray-800 dark:text-white">{title}</p>
                     </Link>
-                    {/* <HugeiconsIcon className="text-lg text-main-100 hover:scale-125 duration-200 cursor-pointer disabled:opacity-50"
-                        
-                        HugeiconsIcon={isPending ? 'svg-spinners:gooey-balls-1' : isFavorite ? saveFavoriteHugeiconsIcon : saveHugeiconsIcon}
-                        onClick={() => handleToggleFavorite(id)}
-                    /> */}
+                    <WishlistButton courseId={id} isWishlisted={isWishlisted} />
                 </div>
 
 
@@ -53,8 +59,8 @@ function CourseCard({ id, src, title, discount, price, teacher, rate, duration, 
             {/* پروفایل معلم */}
             <section className="flex justify-between mt-6 items-center">
                 <div className="flex items-center gap-1.5 text-gray-500 hover:text-teal-500 duration-200">
-                    <img src="/images/person.webp" alt="teacher_profile" className="rounded-full w-7 h-7 object-cover" />
-                    <span className="text-sm">{teacher}</span>
+                    <img src={teacherAvatar ?? "/images/person.webp"} alt="teacher_profile" className="rounded-full w-7 h-7 object-cover" />
+                    <span className="text-sm">{teacherName ?? "علی احمدی"}</span>
                 </div>
 
                 <div className="flex gap-1">

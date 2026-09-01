@@ -17,7 +17,11 @@ import RoleGuard from "../role-guard";
 
 
 
-function Navbar() {
+type NavbarProps = {
+    cartCount: number
+}
+
+function Navbar({ cartCount }: NavbarProps) {
     return (
         <header className="sticky top-0 z-50 flex items-center justify-between px-4 md:px-10 border-b border-b-gray-300 dark:border-b-gray-800 bg-background">
             <section className="flex items-center gap-x-3 md:gap-x-6">
@@ -34,10 +38,16 @@ function Navbar() {
                 {/* در موبایل فقط لوگو و دکمه theme نمایش داده می‌شود */}
                 <ModeToggle />
 
-                <Link href="#" className="hidden md:block">
+                <Link href="/cart" className="relative hidden md:block">
                     <Button size="icon-lg" variant="outline" className="border border-primary/50">
                         <HugeiconsIcon icon={ShoppingBag03Icon} className="size-6! text-primary" />
                     </Button>
+
+                    {cartCount > 0 && (
+                        <span className="absolute -top-1.5 -left-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                            {cartCount.toLocaleString("fa-IR")}
+                        </span>
+                    )}
                 </Link>
 
                 <Show when="signed-out">

@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { HugeiconsIcon } from "@hugeicons/react"
-import { AiIdeaIcon, BookOpen01Icon, Target02Icon } from "@hugeicons/core-free-icons"
+import { BookOpen01Icon, Target02Icon } from "@hugeicons/core-free-icons"
 
 function Hero() {
     return (
@@ -20,7 +20,7 @@ function Hero() {
                         <HugeiconsIcon icon={Target02Icon} />
                         <span className="text-lg font-medium cursor-pointer">شروع کنید</span>
                     </button>
-                    <Link href="/learns" className="w-full md:w-fit flex items-center justify-center gap-2 text-white bg-first px-6 py-2 rounded-full bg-primary cursor-pointer dark:bg-secondary dark:border dark:border-primary/50 dark:text-slate-200">
+                    <Link href="/courses" className="w-full md:w-fit flex items-center justify-center gap-2 text-white bg-first px-6 py-2 rounded-full bg-primary cursor-pointer dark:bg-secondary dark:border dark:border-primary/50 dark:text-slate-200">
                         <HugeiconsIcon icon={BookOpen01Icon} />
                         <span className="text-lg font-medium cursor-pointer">دوره‌های ما</span>
                     </Link>

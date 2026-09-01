@@ -1,9 +1,11 @@
 import CourseCard from "@/components/custom/course-card";
-import { favoriteCourses } from "@/fake-data/user-dashboard";
+import { getWishlistCourses } from "@/data/wishlist";
 
 import PageHeader from "../_components/page-header";
 
-export default function FavoritesPage() {
+export default async function FavoritesPage() {
+    const courses = await getWishlistCourses();
+
     return (
         <section className="space-y-5">
             <PageHeader
@@ -11,11 +13,17 @@ export default function FavoritesPage() {
                 description="دوره‌هایی که به لیست علاقه‌مندی‌های خود اضافه کرده‌اید"
             />
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {favoriteCourses.map(course => (
-                    <CourseCard key={course.id} {...course} />
-                ))}
-            </div>
+            {courses.length === 0 ? (
+                <p className="text-sm text-gray-500 dark:text-gray-300">
+                    هنوز دوره‌ای به علاقه‌مندی‌ها اضافه نکرده‌اید.
+                </p>
+            ) : (
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                    {courses.map(course => (
+                        <CourseCard key={course.id} {...course} isWishlisted />
+                    ))}
+                </div>
+            )}
         </section>
     );
 }

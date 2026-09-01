@@ -9,15 +9,17 @@ import { HugeiconsIcon } from "@hugeicons/react"
 
 import SectionHeader from "./section-header"
 
-import { courseType } from "@/fake-data/courses"
 import CourseCard from "@/components/custom/course-card"
+import { Course } from "@/generated/prisma/client"
 
 interface CardSliderProps {
-    courses: courseType[]
+    courses: Course[]
     title: string
+    /** شناسه دوره‌هایی که در علاقه‌مندی‌های کاربر هستند (برای قلب کارت‌ها) */
+    wishlistedCourseIds: string[]
 }
 
-function CardSlider({ title, courses }: CardSliderProps) {
+function CardSlider({ title, courses, wishlistedCourseIds }: CardSliderProps) {
     const [api, setApi] = useState<CarouselApi>()
     const [canScrollPrev, setCanScrollPrev] = useState(false)
     const [canScrollNext, setCanScrollNext] = useState(false)
@@ -78,7 +80,7 @@ function CardSlider({ title, courses }: CardSliderProps) {
                     <CarouselContent className="my-4 mr-1">
                         {courses.map(course => (
                             <CarouselItem key={course.id} className="basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/5">
-                                <CourseCard {...course} />
+                                <CourseCard {...course} isWishlisted={wishlistedCourseIds.includes(course.id)} />
                             </CarouselItem>
                         ))}
                     </CarouselContent>

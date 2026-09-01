@@ -4,6 +4,9 @@ export type lessonType = {
     id: number
     title: string
     duration: string
+    /** ویدئوهایی که هنوز برای کاربر قابل تماشا نیستند */
+    locked?: boolean
+    videoUrl?: string
 }
 
 export type chapterType = {
@@ -56,7 +59,7 @@ const details: Record<number, courseDetailType> = {
                 lessons: [
                     { id: 1, title: 'آشنایی با دوره و نقشه راه', duration: '۰۸:۳۰' },
                     { id: 2, title: 'خودشناسی؛ نقطه شروع تغییر', duration: '۱۲:۱۵' },
-                    { id: 3, title: 'تعیین اهداف هوشمند (SMART)', duration: '۱۰:۴۵' },
+                    { id: 3, title: 'تعیین اهداف هوشمند (SMART)', duration: '۱۰:۴۵', locked: true },
                 ],
             },
             {
@@ -73,7 +76,7 @@ const details: Record<number, courseDetailType> = {
                 lessons: [
                     { id: 6, title: 'چرخه عادت‌ها و نحوه تغییر آن‌ها', duration: '۱۴:۱۰' },
                     { id: 7, title: 'حفظ انگیزه در مسیر رشد', duration: '۰۷:۴۵' },
-                    { id: 8, title: 'جمع‌بندی و برنامه شخصی شما', duration: '۰۶:۳۰' },
+                    { id: 8, title: 'جمع‌بندی و برنامه شخصی شما', duration: '۰۶:۳۰', locked: true },
                 ],
             },
         ],
@@ -133,7 +136,7 @@ const details: Record<number, courseDetailType> = {
                 title: 'فصل دوم: Word پیشرفته',
                 lessons: [
                     { id: 3, title: 'استایل‌ها و فهرست خودکار', duration: '۱۸:۴۵' },
-                    { id: 4, title: 'ادغام پستی و فرم‌ها', duration: '۲۰:۱۰' },
+                    { id: 4, title: 'ادغام پستی و فرم‌ها', duration: '۲۰:۱۰', locked: true },
                 ],
             },
             {
@@ -142,7 +145,7 @@ const details: Record<number, courseDetailType> = {
                 lessons: [
                     { id: 5, title: 'توابع پرکاربرد و ترکیبی', duration: '۲۲:۳۰' },
                     { id: 6, title: 'PivotTable و نمودارهای حرفه‌ای', duration: '۲۵:۰۰' },
-                    { id: 7, title: 'ابزارهای تحلیل داده', duration: '۱۹:۱۵' },
+                    { id: 7, title: 'ابزارهای تحلیل داده', duration: '۱۹:۱۵', locked: true },
                 ],
             },
             {
@@ -204,7 +207,7 @@ const details: Record<number, courseDetailType> = {
                 lessons: [
                     { id: 3, title: 'سبک‌های رهبری', duration: '۱۲:۴۵' },
                     { id: 4, title: 'مدیریت انگیزه و عملکرد', duration: '۱۷:۲۰' },
-                    { id: 5, title: 'بازخورد مؤثر', duration: '۰۹:۱۰' },
+                    { id: 5, title: 'بازخورد مؤثر', duration: '۰۹:۱۰', locked: true },
                 ],
             },
             {
@@ -213,7 +216,7 @@ const details: Record<number, courseDetailType> = {
                 lessons: [
                     { id: 6, title: 'مدل‌های تصمیم‌گیری', duration: '۱۳:۰۰' },
                     { id: 7, title: 'حل مسئله خلاقانه', duration: '۱۵:۳۵' },
-                    { id: 8, title: 'مدیریت بحران', duration: '۱۱:۵۰' },
+                    { id: 8, title: 'مدیریت بحران', duration: '۱۱:۵۰', locked: true },
                 ],
             },
         ],
@@ -263,7 +266,7 @@ function fallbackDetail(course: courseType): courseDetailType {
             lessons: [
                 { id: 3, title: 'مفاهیم پایه', duration: '۱۴:۱۵' },
                 { id: 4, title: 'تمرین عملی اول', duration: '۱۸:۴۵' },
-                { id: 5, title: 'تمرین عملی دوم', duration: '۱۲:۲۰' },
+                { id: 5, title: 'تمرین عملی دوم', duration: '۱۲:۲۰', locked: true },
             ],
         },
         {
@@ -271,7 +274,7 @@ function fallbackDetail(course: courseType): courseDetailType {
             title: 'فصل سوم: جمع‌بندی و پروژه نهایی',
             lessons: [
                 { id: 6, title: 'مرور مطالب دوره', duration: '۰۹:۴۰' },
-                { id: 7, title: 'پروژه پایانی', duration: '۲۰:۰۰' },
+                { id: 7, title: 'پروژه پایانی', duration: '۲۰:۰۰', locked: true },
             ],
         },
     ]
@@ -315,4 +318,8 @@ function fallbackDetail(course: courseType): courseDetailType {
 
 export function getCourseDetail(course: courseType): courseDetailType {
     return details[course.id] ?? fallbackDetail(course)
+}
+
+export function getLessonVideoUrl(lesson: lessonType): string {
+    return lesson.videoUrl ?? '/videoTest.mp4'
 }

@@ -12,8 +12,8 @@ type CourseSectionProps = {
 function CourseSection({ icon, title, subtitle, children }: CourseSectionProps) {
     return (
         <Card className="border-teal-200 bg-white shadow-md shadow-teal-200 dark:bg-gray-800 dark:border-gray-700 dark:shadow-none p-4 md:p-6">
-            <div className="mb-5 flex items-center gap-3">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary dark:bg-gray-700 dark:text-slate-200">
+            <div className="flex items-center gap-3">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary/20 text-primary dark:bg-gray-700 dark:text-slate-200">
                     <HugeiconsIcon icon={icon} className="size-6" />
                 </span>
 

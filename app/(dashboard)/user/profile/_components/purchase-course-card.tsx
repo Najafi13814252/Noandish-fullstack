@@ -7,28 +7,24 @@ import { Progress } from "@/components/ui/progress";
 import { PlayCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { cards } from "@/fake-data/courses";
-import { PurchasedCourseType } from "@/fake-data/user-dashboard";
+import { Course } from "@/generated/prisma/client";
 
 type PurchaseCourseCardProps = {
-    purchase: PurchasedCourseType;
+    course: Course;
+    progress: number;
+    totalLessons: number;
+    completedLessons: number;
 };
 
-function PurchaseCourseCard({ purchase }: PurchaseCourseCardProps) {
-    const course = cards.find(card => card.id === purchase.courseId);
-
-    if (!course) {
-        return null;
-    }
-
-    const isCompleted = purchase.progress === 100;
+function PurchaseCourseCard({ course, progress, totalLessons, completedLessons }: PurchaseCourseCardProps) {
+    const isCompleted = progress === 100;
 
     return (
         <Card className="flex flex-col gap-4 overflow-hidden p-0">
             {/* عکس دوره */}
             <Link href={`/courses/${course.id}`} className="relative block h-36 w-full">
                 <Image
-                    src={course.src || "/images/img-1.webp"}
+                    src={course.imageUrl || "/images/img-1.webp"}
                     alt={course.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 33vw"
@@ -52,13 +48,15 @@ function PurchaseCourseCard({ purchase }: PurchaseCourseCardProps) {
                 {/* نوار پیشرفت */}
                 <div className="mt-auto space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
-                        <span className="text-gray-500 dark:text-gray-300">پیشرفت دوره</span>
+                        <span className="text-gray-500 dark:text-gray-300">
+                            {completedLessons.toLocaleString("fa-IR")} از {totalLessons.toLocaleString("fa-IR")} جلسه
+                        </span>
                         <span className="font-medium text-primary">
-                            {purchase.progress.toLocaleString("fa-IR")}٪
+                            {progress.toLocaleString("fa-IR")}٪
                         </span>
                     </div>
 
-                    <Progress value={purchase.progress} className="h-2.5 [&>div]:rounded-full" />
+                    <Progress value={progress} className="h-2 [&>div]:h-2 [&>div]:my-auto [&>div]:rounded-full"/>
                 </div>
 
                 {/* دکمه ادامه */}

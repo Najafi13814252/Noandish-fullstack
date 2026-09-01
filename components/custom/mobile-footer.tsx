@@ -35,7 +35,7 @@ function MobileFooter() {
 
             <Categories variant="tab" />
 
-            <Link href="#" className={tabClass(false)}>
+            <Link href="/cart" className={tabClass(pathname.startsWith("/cart"))}>
                 <HugeiconsIcon icon={ShoppingBag03Icon} className="size-6" />
                 سبد خرید
             </Link>

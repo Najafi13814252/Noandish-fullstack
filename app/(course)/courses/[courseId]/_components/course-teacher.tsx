@@ -2,13 +2,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { BookBookmark01Icon, TeacherIcon, UserMultipleIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-import { teacherType } from "@/fake-data/course-details"
-
 import CourseSection from "./course-section"
 import StarRating from "./star-rating"
+import { Teacher } from "@/generated/prisma/client"
 
 type CourseTeacherProps = {
-    teacher: teacherType
+    teacher: Teacher
 }
 
 function CourseTeacher({ teacher }: CourseTeacherProps) {
@@ -22,10 +21,7 @@ function CourseTeacher({ teacher }: CourseTeacherProps) {
 
                 <div className="flex-1">
                     <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                            <h3 className="text-lg font-bold text-gray-800 dark:text-white">{teacher.name}</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-300">{teacher.role}</p>
-                        </div>
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white">{teacher.name}</h3>
 
                         <div className="flex items-center gap-1.5">
                             <StarRating rate={teacher.rating} />
