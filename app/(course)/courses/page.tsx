@@ -10,10 +10,28 @@ import CoursesToolbar from "./_components/courses-toolbar"
 import { countFilteredCourses, getPriceBounds } from "@/data/courses"
 import { getWishlistedCourseIds } from "@/data/wishlist"
 import { parseCourseFilters, serializeFilters } from "@/lib/course-filters"
+import { SITE_NAME } from "@/lib/seo"
 
 export const metadata: Metadata = {
-    title: "دوره‌ها | نواندیش",
-    description: "فهرست دوره‌های تخصصی نواندیش با فیلتر بر اساس قیمت، نوع و امتیاز",
+    // قالب عنوان ریشه، « | نواندیش» را خودکار اضافه می‌کند
+    title: "دوره‌های تخصصی",
+    description: "فهرست کامل دوره‌های تخصصی نواندیش — دوره‌های رایگان، تخفیف‌دار و پولی با تدریس بهترین اساتید ایران؛ فیلتر بر اساس قیمت، نوع و امتیاز",
+    keywords: ["دوره تخصصی", "دوره آنلاین", "آموزش تخصصی", "دوره رایگان", "نواندیش"],
+    alternates: {
+        canonical: "/courses",
+    },
+    openGraph: {
+        type: "website",
+        locale: "fa_IR",
+        url: "/courses",
+        siteName: SITE_NAME,
+        title: "دوره‌های تخصصی | نواندیش",
+        description: "فهرست کامل دوره‌های تخصصی نواندیش — دوره‌های رایگان، تخفیف‌دار و پولی با تدریس بهترین اساتید ایران",
+    },
+    robots: {
+        index: true,
+        follow: true,
+    },
 }
 
 type CoursesPageProps = {

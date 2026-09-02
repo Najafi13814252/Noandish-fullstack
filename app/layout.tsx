@@ -1,4 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
+import { JsonLd } from "@/components/custom/json-ld";
+import {
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  SITE_ORGANIZATION_NAME,
+  SITE_TITLE,
+  SITE_URL,
+} from "@/lib/seo";
 
 import "./globals.css";
 import localFont from 'next/font/local'
@@ -51,19 +61,99 @@ const lalezar = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "نواندیش",
-  description: "بنیاد تعالی آموزش‌های تخصصی نواندیش",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    // عنوان صفحه‌های داخلی به این قالب اضافه می‌شود: «دوره‌ها | نواندیش»
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: SITE_ORGANIZATION_NAME, url: SITE_URL }],
+  creator: SITE_ORGANIZATION_NAME,
+  publisher: SITE_ORGANIZATION_NAME,
+  category: "education",
+  // شماره‌تلفن و ایمیل موجود در متن صفحه را به لینک تبدیل نکن
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "fa_IR",
+    url: "/",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  manifest: "/manifest.webmanifest",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#082f49" },
+  ],
+};
+
+/** structured data سراسری: سازمان و وب‌سایت */
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: SITE_ORGANIZATION_NAME,
+  alternateName: SITE_NAME,
+  url: SITE_URL,
+  logo: `${SITE_URL}/icon`,
+  description: SITE_DESCRIPTION,
+  sameAs: [],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  inLanguage: "fa-IR",
+  publisher: {
+    "@type": "Organization",
+    name: SITE_ORGANIZATION_NAME,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="fa"
       dir="rtl"
       suppressHydrationWarning
       className={cn("h-full", "antialiased", arad.variable, lalezar.variable, "font-arad")}
     >
       <body>
+        <JsonLd data={organizationJsonLd} />
+        <JsonLd data={websiteJsonLd} />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

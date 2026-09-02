@@ -3,10 +3,14 @@ import type { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
+import { NO_INDEX_ROBOTS } from "@/lib/seo";
+
 import Sidebar from "./_components/sidebar";
 
 export const metadata: Metadata = {
-    title: "پروفایل کاربری | نواندیش",
+    title: "پروفایل کاربری",
+    description: "پروفایل کاربری، دوره‌های خریداری‌شده و تنظیمات حساب کاربری در نواندیش",
+    robots: NO_INDEX_ROBOTS,
 };
 
 type ProfileLayoutProps = {

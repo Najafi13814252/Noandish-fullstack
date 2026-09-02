@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -9,6 +10,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { getChaptersWithLessons, getCourse } from "@/data/courses";
 import { getCompletedLessonIds } from "@/data/user-progress";
 import { isCoursePurchased } from "@/actions/payment";
+import { NO_INDEX_FOLLOW_ROBOTS } from "@/lib/seo";
 
 import ChapterActions from "./_components/chapter-actions";
 import ChapterVideoPlayer from "./_components/chapter-video-player";
@@ -18,6 +20,33 @@ type ChapterPageProps = {
     params: Promise<{ courseId: string; chapterId: string }>;
     searchParams: Promise<{ lesson?: string | string[] }>;
 };
+
+export async function generateMetadata({ params }: ChapterPageProps): Promise<Metadata> {
+    const { courseId, chapterId } = await params;
+
+    // به‌دلیل cache شدن این توابع، با کوئری‌های خود صفحه مشترک‌اند
+    const [course, chapters] = await Promise.all([
+        getCourse(courseId),
+        getChaptersWithLessons(courseId),
+    ]);
+
+    const chapter = chapters.find(item => item.id === chapterId);
+
+    if (!course || !chapter) {
+        return { title: "درس پیدا نشد" };
+    }
+
+    // صفحهٔ پخش ویدئو برای سئو ارزش ندارد (محتوای اصلی در صفحهٔ دوره است) و
+    // پارامتر ?lesson= نسخه‌های تکراری می‌سازد؛ پس ایندکس نمی‌شود
+    return {
+        title: `${chapter.title} | ${course.title}`,
+        description: `آموزش «${chapter.title}» از دورهٔ «${course.title}» در نواندیش`,
+        alternates: {
+            canonical: `/courses/${course.id}/chapters/${chapter.id}`,
+        },
+        robots: NO_INDEX_FOLLOW_ROBOTS,
+    };
+}
 
 export default async function ChapterPage({ params, searchParams }: ChapterPageProps) {
     const { courseId, chapterId } = await params;

@@ -1,13 +1,21 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ArrowLeft02Icon, ShoppingBag03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { getCartCourses } from "@/actions/cart";
+import { NO_INDEX_ROBOTS } from "@/lib/seo";
 
 import CartItemCard from "../_components/cart-item-card";
 import CartSummary from "../_components/cart-summary";
 import EmptyCart from "../_components/empty-cart";
+
+// صفحهٔ شخصیِ کاربر؛ نباید در نتایج جستجو بیاید
+export const metadata: Metadata = {
+    title: "سبد خرید",
+    robots: NO_INDEX_ROBOTS,
+};
 
 export default async function CartPage() {
   const cartCourses = await getCartCourses();

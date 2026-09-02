@@ -1,5 +1,7 @@
 "use server"
 
+import { cache } from "react"
+
 import { Prisma } from "@/generated/prisma/client"
 
 import { prisma } from "@/lib/prisma"
@@ -140,7 +142,9 @@ export async function getPriceBounds(): Promise<PriceBounds> {
     }
 }
 
-export async function getCourse(courseId: string) {
+// با cache پیچیده می‌شود تا صفحه و generateMetadata در یک ریکوئست
+// فقط یک بار به دیتابیس مراجعه کنند
+export const getCourse = cache(async (courseId: string) => {
     const course = await prisma.course.findUnique({
         where: {
             id: courseId
@@ -151,9 +155,9 @@ export async function getCourse(courseId: string) {
     })
 
     return course
-}
+})
 
-export async function getChaptersWithLessons(courseId: string) {
+export const getChaptersWithLessons = cache(async (courseId: string) => {
     const chapters = await prisma.chapter.findMany({
         where: {
             courseId
@@ -164,4 +168,4 @@ export async function getChaptersWithLessons(courseId: string) {
     })
 
     return chapters
-}
+})

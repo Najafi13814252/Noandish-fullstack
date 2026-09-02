@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,13 @@ import {
     Playlist02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { NO_INDEX_ROBOTS } from "@/lib/seo";
+
+// صفحهٔ داخلی نتیجهٔ پرداخت؛ نباید ایندکس شود
+export const metadata: Metadata = {
+    title: "نتیجه پرداخت",
+    robots: NO_INDEX_ROBOTS,
+};
 
 type PaymentResultPageProps = {
     searchParams: Promise<{ status?: string; refId?: string }>;
