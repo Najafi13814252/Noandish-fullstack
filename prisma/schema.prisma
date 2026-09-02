@@ -19,26 +19,27 @@ model Teacher {
 }
 
 model Course {
-  id              String    @id @default(uuid())
+  id              String     @id @default(uuid())
   imageUrl        String
   title           String
   price           Int
-  rate            Float     @default(0)
-  lesson          Int       @default(0)
-  members         Int       @default(0)
-  duration        Int       @default(0)
-  discount        Int       @default(0)
-  description     String?   @db.Text
-  fullDescription String?   @db.Text
-  prerequisites   String?   @db.Text
-  language        String    @default("فارسی")
-  createdAt       DateTime  @default(now())
+  rate            Float      @default(0)
+  lesson          Int        @default(0)
+  members         Int        @default(0)
+  duration        Int        @default(0)
+  discount        Int        @default(0)
+  description     String?    @db.Text
+  fullDescription String?    @db.Text
+  prerequisites   String?    @db.Text
+  language        String     @default("فارسی")
+  createdAt       DateTime   @default(now())
   teacherId       String
-  teacher         Teacher   @relation(fields: [teacherId], references: [id])
+  teacher         Teacher    @relation(fields: [teacherId], references: [id])
   chapters        Chapter[]
   reviews         Review[]
   wishlists       Wishlist[]
   cartItems       CartItem[]
+  payments        Payment[]
 
   @@index([teacherId])
 }
@@ -54,15 +55,15 @@ model Chapter {
 }
 
 model Lesson {
-  id             String         @id @default(uuid())
-  title          String
-  duration       String?
-  videoUrl       String?        @db.Text
-  posterUrl      String?        @db.Text
-  isLock         Boolean        @default(false)
-  chapterId      String
-  chapter        Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade)
-  
+  id        String  @id @default(uuid())
+  title     String
+  duration  String?
+  videoUrl  String? @db.Text
+  posterUrl String? @db.Text
+  isLock    Boolean @default(false)
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
   userProgresses UserProgress[]
 
   @@index([chapterId])
@@ -108,9 +109,9 @@ model Wishlist {
 }
 
 model Cart {
-  id        String     @id @default(uuid())
-  userId    String     @unique @db.VarChar(100)
-  createdAt DateTime   @default(now())
+  id        String   @id @default(uuid())
+  userId    String   @unique @db.VarChar(100)
+  createdAt DateTime @default(now())
 
   items CartItem[]
 }
@@ -126,4 +127,38 @@ model CartItem {
   @@unique([cartId, courseId])
   @@index([cartId])
   @@index([courseId])
+}
+
+model Payment {
+  id String @id @default(uuid())
+
+  userId String @db.VarChar(100)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  amount Int
+
+  // شناسه مشترک ردیف‌های یک سفارش (سبد می‌تواند چند دوره داشته باشد و زرین‌پال
+  // در هر تراکنش فقط یک authority می‌دهد)
+  orderId String?
+
+  authority String?
+  refId     String?
+
+  status PaymentStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([courseId])
+  @@index([orderId])
+  @@index([authority])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

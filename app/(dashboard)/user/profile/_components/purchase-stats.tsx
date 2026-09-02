@@ -4,37 +4,38 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Invoice01Icon, Playlist02Icon, Wallet01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { purchaseHistory, PurchaseStatusType } from "@/fake-data/user-dashboard";
+import { PurchaseHistoryItem, PurchaseStatsData } from "@/actions/payment";
 import { cn } from "@/lib/utils";
 
-const statusClass: Record<PurchaseStatusType, string> = {
-    "موفق": "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400",
-    "ناموفق": "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400",
-    "در انتظار": "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
+const statusLabel: Record<PurchaseHistoryItem["status"], string> = {
+    SUCCESS: "موفق",
+    FAILED: "ناموفق",
+    PENDING: "در انتظار",
 };
 
-function PurchaseStats() {
-    const totalPaid = purchaseHistory
-        .filter(item => item.status === "موفق")
-        .reduce((sum, item) => sum + item.price, 0);
-    const activeCourses = purchaseHistory.filter(item => item.status === "موفق").length;
+const statusClass: Record<PurchaseHistoryItem["status"], string> = {
+    SUCCESS: "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400",
+    FAILED: "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400",
+    PENDING: "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400",
+};
 
+function PurchaseStats({ stats }: { stats: PurchaseStatsData }) {
     const summary = [
         {
             label: "کل تراکنش‌ها",
-            value: purchaseHistory.length.toLocaleString("fa-IR"),
+            value: stats.totalCount.toLocaleString("fa-IR"),
             icon: Invoice01Icon,
             iconClass: "text-sky-500",
         },
         {
             label: "مجموع پرداختی",
-            value: `${totalPaid.toLocaleString("fa-IR")} تومان`,
+            value: `${stats.totalPaid.toLocaleString("fa-IR")} تومان`,
             icon: Wallet01Icon,
             iconClass: "text-emerald-500",
         },
         {
             label: "دوره‌های فعال",
-            value: activeCourses.toLocaleString("fa-IR"),
+            value: stats.activeCourses.toLocaleString("fa-IR"),
             icon: Playlist02Icon,
             iconClass: "text-primary",
         },
@@ -68,15 +69,16 @@ function PurchaseStats() {
                             <TableHead>تاریخ خرید</TableHead>
                             <TableHead>مبلغ</TableHead>
                             <TableHead>روش پرداخت</TableHead>
+                            <TableHead>کد رهگیری</TableHead>
                             <TableHead>وضعیت</TableHead>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
-                        {purchaseHistory.map(item => (
+                        {stats.history.map((item, index) => (
                             <TableRow key={item.id}>
                                 <TableCell className="text-muted-foreground">
-                                    {item.id.toLocaleString("fa-IR")}
+                                    {(index + 1).toLocaleString("fa-IR")}
                                 </TableCell>
 
                                 <TableCell className="font-medium text-gray-800 dark:text-white">
@@ -86,16 +88,20 @@ function PurchaseStats() {
                                 <TableCell>{item.date}</TableCell>
 
                                 <TableCell className="whitespace-nowrap">
-                                    {item.price === 0
+                                    {item.amount === 0
                                         ? "رایگان"
-                                        : `${item.price.toLocaleString("fa-IR")} تومان`}
+                                        : `${item.amount.toLocaleString("fa-IR")} تومان`}
                                 </TableCell>
 
                                 <TableCell>{item.method}</TableCell>
 
+                                <TableCell className="whitespace-nowrap">
+                                    {item.refId ? Number(item.refId) : "—"}
+                                </TableCell>
+
                                 <TableCell>
                                     <Badge variant="outline" className={statusClass[item.status]}>
-                                        {item.status}
+                                        {statusLabel[item.status]}
                                     </Badge>
                                 </TableCell>
                             </TableRow>

@@ -18,9 +18,11 @@ type CourseLessonsAccordionProps = {
     currentLessonId: string;
     /** شناسه درس‌هایی که کاربر «کامل دیده» است (از سرور می‌آید) */
     completedLessonIds: string[];
+    /** آیا قفل ویدیوهای این دوره برای کاربر باز است؟ */
+    unlocked: boolean;
 };
 
-function CourseLessonsAccordion({ courseId, chapters, currentChapterId, currentLessonId, completedLessonIds }: CourseLessonsAccordionProps) {
+function CourseLessonsAccordion({ courseId, chapters, currentChapterId, currentLessonId, completedLessonIds, unlocked }: CourseLessonsAccordionProps) {
     return (
         <Accordion defaultValue={[currentChapterId]} className="border-0">
             {chapters.map(chapter => (
@@ -47,6 +49,7 @@ function CourseLessonsAccordion({ courseId, chapters, currentChapterId, currentL
                                     lesson={lesson}
                                     isCurrent={chapter.id === currentChapterId && lesson.id === currentLessonId}
                                     isWatched={completedLessonIds.includes(lesson.id)}
+                                    unlocked={unlocked}
                                 />
                             ))}
                         </ul>
@@ -63,10 +66,11 @@ type LessonLinkProps = {
     lesson: Lesson;
     isCurrent: boolean;
     isWatched: boolean;
+    unlocked: boolean;
 };
 
-function LessonLink({ courseId, chapterId, lesson, isCurrent, isWatched }: LessonLinkProps) {
-    const locked = lesson.isLock;
+function LessonLink({ courseId, chapterId, lesson, isCurrent, isWatched, unlocked }: LessonLinkProps) {
+    const locked = lesson.isLock && !unlocked;
 
     return (
         <li>

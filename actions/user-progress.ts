@@ -15,8 +15,9 @@ export type MyCourse = {
 }
 
 /**
- * دوره‌هایی که کاربر واردشده حداقل یک جلسه‌شان را دیده است (رکورد پیشرفت دارد)
- * به‌همراه درصد پیشرفت واقعی (جلسات کامل‌دیده‌شده ÷ کل جلسات) برمی‌گرداند.
+ * دوره‌های کاربر واردشده را برمی‌گرداند: دوره‌هایی که خریده است (پرداخت موفق)
+ * یا حداقل یک جلسه‌شان را دیده است، به‌همراه درصد پیشرفت واقعی
+ * (جلسات کامل‌دیده‌شده ÷ کل جلسات).
  */
 export async function getMyCourses(): Promise<MyCourse[]> {
     const user = await currentUser()
@@ -27,17 +28,26 @@ export async function getMyCourses(): Promise<MyCourse[]> {
 
     const courses = await prisma.course.findMany({
         where: {
-            chapters: {
-                some: {
-                    lessons: {
+            OR: [
+                {
+                    chapters: {
                         some: {
-                            userProgresses: {
-                                some: { userId: user.id },
+                            lessons: {
+                                some: {
+                                    userProgresses: {
+                                        some: { userId: user.id },
+                                    },
+                                },
                             },
                         },
                     },
                 },
-            },
+                {
+                    payments: {
+                        some: { userId: user.id, status: "SUCCESS" },
+                    },
+                },
+            ],
         },
         include: {
             chapters: {

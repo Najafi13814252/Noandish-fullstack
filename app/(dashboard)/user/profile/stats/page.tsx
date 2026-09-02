@@ -1,7 +1,11 @@
+import { getPurchaseStats } from "@/actions/payment";
+
 import PageHeader from "../_components/page-header";
 import PurchaseStats from "../_components/purchase-stats";
 
-export default function StatsPage() {
+export default async function StatsPage() {
+    const stats = await getPurchaseStats();
+
     return (
         <section className="space-y-5">
             <PageHeader
@@ -9,7 +13,7 @@ export default function StatsPage() {
                 description="خلاصه تراکنش‌ها و تاریخچه خریدهای شما"
             />
 
-            <PurchaseStats />
+            <PurchaseStats stats={stats} />
         </section>
     );
 }

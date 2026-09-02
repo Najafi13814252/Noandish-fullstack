@@ -8,6 +8,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 import { getChaptersWithLessons, getCourse } from "@/data/courses";
 import { getCompletedLessonIds } from "@/data/user-progress";
+import { isCoursePurchased } from "@/actions/payment";
 
 import ChapterActions from "./_components/chapter-actions";
 import ChapterVideoPlayer from "./_components/chapter-video-player";
@@ -22,10 +23,11 @@ export default async function ChapterPage({ params, searchParams }: ChapterPageP
     const { courseId, chapterId } = await params;
     const { lesson: lessonParam } = await searchParams;
 
-    const [course, chapters, completedLessonIds] = await Promise.all([
+    const [course, chapters, completedLessonIds, purchased] = await Promise.all([
         getCourse(courseId),
         getChaptersWithLessons(courseId),
         getCompletedLessonIds(),
+        isCoursePurchased(courseId),
     ]);
 
     if (!course) {
@@ -58,7 +60,10 @@ export default async function ChapterPage({ params, searchParams }: ChapterPageP
     const prev = currentIndex > 0 ? allLessons[currentIndex - 1] : undefined;
     const next = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : undefined;
 
-    const locked = lesson.isLock;
+    // قفل ویدیوها فقط برای کاربری بسته می‌ماند که دوره را نخریده باشد؛
+    // دوره‌های رایگان برای همه باز هستند
+    const hasAccess = purchased || course.discount === 100;
+    const locked = lesson.isLock && !hasAccess;
     const videoUrl = lesson.videoUrl ?? "/videoTest.mp4";
     const poster = lesson.posterUrl ?? course.imageUrl;
 
@@ -134,6 +139,7 @@ export default async function ChapterPage({ params, searchParams }: ChapterPageP
                                 currentChapterId={chapter.id}
                                 currentLessonId={lesson.id}
                                 completedLessonIds={completedLessonIds}
+                                unlocked={hasAccess}
                             />
                         </div>
                     </Card>

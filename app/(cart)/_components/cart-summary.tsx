@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
@@ -17,12 +17,9 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
+import { checkoutCart } from "@/actions/payment";
+import { DISCOUNT_CODES } from "@/lib/discount-codes";
 import { cn } from "@/lib/utils";
-
-const DISCOUNT_CODES: Record<string, number> = {
-  noandish20: 20,
-  off10: 10,
-};
 
 const formatPrice = (value: number) => value.toLocaleString("fa-IR");
 
@@ -50,6 +47,7 @@ type CartSummaryProps = {
 function CartSummary({ totalOriginal, totalDiscount, payable }: CartSummaryProps) {
   const [code, setCode] = useState("");
   const [applied, setApplied] = useState<{ code: string; percent: number } | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const couponDiscount = applied ? Math.round((payable * applied.percent) / 100) : 0;
   const finalPayable = payable - couponDiscount;
@@ -70,7 +68,14 @@ function CartSummary({ totalOriginal, totalDiscount, payable }: CartSummaryProps
   };
 
   const handleCheckout = () => {
-    toast.success("به زودی فرآیند پرداخت فعال می‌شود!");
+    startTransition(async () => {
+      try {
+        // در موفقیت، اکشن کاربر را به درگاه یا صفحه نتیجه هدایت می‌کند
+        await checkoutCart(applied?.code);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "خطا در شروع فرآیند پرداخت");
+      }
+    });
   };
 
   return (
@@ -145,7 +150,7 @@ function CartSummary({ totalOriginal, totalDiscount, payable }: CartSummaryProps
         </span>
       </div>
 
-      <Button size="lg" className="w-full dark:bg-primary/10" onClick={handleCheckout}>
+      <Button size="lg" className="w-full dark:bg-primary/10" onClick={handleCheckout} disabled={isPending}>
         ادامه فرآیند خرید
         <HugeiconsIcon icon={ArrowLeft02Icon} className="size-5" />
       </Button>

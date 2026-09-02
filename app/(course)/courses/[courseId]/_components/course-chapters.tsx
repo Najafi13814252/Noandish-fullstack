@@ -12,9 +12,11 @@ import { Chapter, Lesson } from "@/generated/prisma/client"
 type CourseChaptersProps = {
     courseId: string
     chapters: ({ lessons: Lesson[] } & Chapter)[]
+    /** آیا قفل ویدیوهای این دوره برای کاربر باز است؟ */
+    unlocked: boolean
 }
 
-function CourseChapters({ courseId, chapters }: CourseChaptersProps) {
+function CourseChapters({ courseId, chapters, unlocked }: CourseChaptersProps) {
     const totalLessons = chapters.reduce((total, chapter) => total + chapter.lessons.length, 0)
 
     return (
@@ -32,21 +34,24 @@ function CourseChapters({ courseId, chapters }: CourseChaptersProps) {
 
                         <AccordionContent>
                             <ul className="space-y-1">
-                                {chapter.lessons.map(lesson => (
+                                {chapter.lessons.map(lesson => {
+                                    const locked = lesson.isLock && !unlocked;
+
+                                    return (
                                     <li key={lesson.id}>
                                         <Link
                                             href={`/courses/${courseId}/chapters/${chapter.id}?lesson=${lesson.id}`}
                                             className={cn(
                                                 "flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm no-underline! transition-colors",
-                                                lesson.isLock
+                                                locked
                                                     ? "text-gray-400 hover:bg-muted dark:text-gray-400"
                                                     : "text-gray-600 hover:bg-teal-500/10 hover:text-teal-600! dark:text-gray-200 dark:hover:text-teal-300!"
                                             )}
                                         >
                                             <span className="flex min-w-0 items-center gap-2">
                                                 <HugeiconsIcon
-                                                    icon={lesson.isLock ? LockIcon : PlayCircleIcon}
-                                                    className={cn("size-5 shrink-0", lesson.isLock ? "text-gray-400" : "text-teal-500")}
+                                                    icon={locked ? LockIcon : PlayCircleIcon}
+                                                    className={cn("size-5 shrink-0", locked ? "text-gray-400" : "text-teal-500")}
                                                 />
                                                 <span className="truncate">{lesson.title}</span>
                                             </span>
@@ -56,7 +61,8 @@ function CourseChapters({ courseId, chapters }: CourseChaptersProps) {
                                             </span>
                                         </Link>
                                     </li>
-                                ))}
+                                    );
+                                })}
                             </ul>
                         </AccordionContent>
                     </AccordionItem>

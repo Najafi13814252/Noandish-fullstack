@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { isCourseInCart } from "@/actions/cart";
+import { isCoursePurchased } from "@/actions/payment";
 
 import CourseChapters from "./_components/course-chapters";
 import CourseDescription from "./_components/course-description";
@@ -18,18 +19,26 @@ type CoursePageProps = {
 export default async function Course({ params }: CoursePageProps) {
   const { courseId } = await params;
 
-  const [course, chapters, isInCart] = await Promise.all([
+  const [course, chapters, isInCart, purchased] = await Promise.all([
     getCourse(courseId),
     getChaptersWithLessons(courseId),
-    isCourseInCart(courseId)
+    isCourseInCart(courseId),
+    isCoursePurchased(courseId),
   ])
 
   if (!course) {
     notFound();
   }
 
-  console.log(chapters);
-  
+  // دوره‌های رایگان یا خریداری‌شده برای کاربر باز هستند
+  const unlocked = purchased || course.discount === 100;
+
+  // آدرس اولین درس دوره برای دکمه «ورود به دوره»
+  const firstChapter = chapters[0];
+  const firstLesson = firstChapter?.lessons[0];
+  const firstLessonHref = firstChapter && firstLesson
+    ? `/courses/${course.id}/chapters/${firstChapter.id}?lesson=${firstLesson.id}`
+    : null;
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-20 md:px-6">
@@ -45,7 +54,7 @@ export default async function Course({ params }: CoursePageProps) {
             <CoursePrerequisites prerequisites={detail.prerequisites} />
           )} */}
 
-          <CourseChapters courseId={course.id} chapters={chapters} />
+          <CourseChapters courseId={course.id} chapters={chapters} unlocked={unlocked} />
 
           <CourseTeacher teacher={course.teacher} />
 
@@ -53,7 +62,7 @@ export default async function Course({ params }: CoursePageProps) {
         </div>
 
         <div className="order-1 lg:order-2 lg:sticky lg:top-24">
-          <CoursePurchaseCard {...course} isInCart={isInCart} />
+          <CoursePurchaseCard {...course} isInCart={isInCart} purchased={purchased} firstLessonHref={firstLessonHref} />
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ export default async function PurchasesPage() {
 
             {myCourses.length === 0 ? (
                 <p className="rounded-3xl border border-dashed border-teal-200 bg-teal-50/50 p-8 text-center text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-400">
-                    هنوز دوره‌ای شروع نکرده‌اید. با تماشای اولین جلسه، دوره این‌جا نمایش داده می‌شود.
+                    هنوز دوره‌ای خریداری نکرده‌اید. پس از خرید، دوره‌های شما این‌جا نمایش داده می‌شود.
                 </p>
             ) : (
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">

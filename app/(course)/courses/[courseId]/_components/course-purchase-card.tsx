@@ -2,16 +2,18 @@
 
 import toast from "react-hot-toast";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { BookOpenIcon, CheckmarkCircle02Icon, Clock01Icon, GraduationCapIcon, LanguageCircleIcon, ShoppingBag03Icon, ShoppingBagAddIcon, UserMultipleIcon } from "@hugeicons/core-free-icons";
+import { BookOpenIcon, CheckmarkCircle02Icon, Clock01Icon, GraduationCapIcon, LanguageCircleIcon, PlayCircleIcon, ShoppingBag03Icon, ShoppingBagAddIcon, UserMultipleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { addCourseToCart } from "@/actions/cart";
+import { enrollFreeCourse } from "@/actions/payment";
 import { Course } from "@/generated/prisma/client";
 
 type DetailRowProps = {
@@ -32,9 +34,11 @@ function DetailRow({ icon, label, children }: DetailRowProps) {
 
 type CoursePurchaseCardProps = Course & {
     isInCart: boolean;
+    purchased: boolean;
+    firstLessonHref: string | null;
 };
 
-function CoursePurchaseCard({ price, discount, duration, lesson, members, language, id, isInCart }: CoursePurchaseCardProps) {
+function CoursePurchaseCard({ price, discount, duration, lesson, members, language, id, isInCart, purchased, firstLessonHref }: CoursePurchaseCardProps) {
     const finalPrice = price - (price * discount / 100);
     const isFree = discount === 100;
 
@@ -42,6 +46,18 @@ function CoursePurchaseCard({ price, discount, duration, lesson, members, langua
     const [isPending, startTransition] = useTransition();
 
     const handleBuy = () => {
+        // دوره رایگان بدون درگاه ثبت‌نام می‌شود
+        if (isFree && !purchased) {
+            startTransition(async () => {
+                try {
+                    await enrollFreeCourse(id);
+                } catch (error) {
+                    toast.error(error instanceof Error ? error.message : "خطا در ثبت‌نام دوره");
+                }
+            });
+            return;
+        }
+
         // اگر دوره از قبل در سبد باشد، کاربر را به صفحه سبد خرید می‌برد
         if (isInCart) {
             router.push("/cart");
@@ -91,16 +107,27 @@ function CoursePurchaseCard({ price, discount, duration, lesson, members, langua
             </section>
 
             {/* دکمه خرید */}
-            <Button
-                size="lg"
-                className="w-full dark:bg-primary/10"
-                variant={isInCart ? "outline" : "default"}
-                disabled={isPending}
-                onClick={handleBuy}
-            >
-                <HugeiconsIcon icon={isInCart ? ShoppingBag03Icon : ShoppingBagAddIcon} className="size-5" />
-                {isInCart ? "مشاهده سبد خرید" : isFree ? "شرکت در دوره" : "خرید دوره"}
-            </Button>
+            {purchased ? (
+                <Button
+                    size="lg"
+                    className="w-full dark:bg-primary/10"
+                    render={<Link href={firstLessonHref ?? `/courses/${id}`} />}
+                >
+                    <HugeiconsIcon icon={PlayCircleIcon} className="size-5" />
+                    ورود به دوره
+                </Button>
+            ) : (
+                <Button
+                    size="lg"
+                    className="w-full dark:bg-primary/10"
+                    variant={isInCart ? "outline" : "default"}
+                    disabled={isPending}
+                    onClick={handleBuy}
+                >
+                    <HugeiconsIcon icon={isInCart ? ShoppingBag03Icon : ShoppingBagAddIcon} className="size-5" />
+                    {isInCart ? "مشاهده سبد خرید" : isFree ? "شرکت در دوره" : "خرید دوره"}
+                </Button>
+            )}
 
             <Separator className="bg-gray-200 dark:bg-gray-700" />
 
