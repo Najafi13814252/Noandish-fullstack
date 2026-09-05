@@ -60,7 +60,7 @@ function MobileFiltersSheet({ filters, bounds }: MobileFiltersSheetProps) {
                 <SheetFooter>
                     <SheetClose
                         render={
-                            <Button className="w-full">
+                            <Button className="w-full dark:bg-primary/10">
                                 مشاهدهٔ نتایج
                             </Button>
                         }
