@@ -95,7 +95,7 @@ function ChapterActions({ courseId, lesson, locked, completed, prev, next }: Cha
             {next ? (
                 <Link
                     href={`/courses/${courseId}/chapters/${next.chapterId}?lesson=${next.lessonId}`}
-                    className={buttonVariants({ variant: "default", size: "lg" })}
+                    className={buttonVariants({ variant: "default", size: "lg", className: " dark:bg-primary/10"})}
                 >
                     ویدئوی بعدی
                     <HugeiconsIcon icon={ArrowLeft01Icon} />
