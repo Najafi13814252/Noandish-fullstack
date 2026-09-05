@@ -101,7 +101,7 @@ function ChapterActions({ courseId, lesson, locked, completed, prev, next }: Cha
                     <HugeiconsIcon icon={ArrowLeft01Icon} />
                 </Link>
             ) : (
-                <Button variant="default" size="lg" disabled>
+                <Button variant="default" size="lg" disabled className="dark:bg-primary/10">
                     ویدئوی بعدی
                     <HugeiconsIcon icon={ArrowLeft01Icon} />
                 </Button>
