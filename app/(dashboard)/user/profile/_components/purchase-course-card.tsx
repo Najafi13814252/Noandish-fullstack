@@ -60,7 +60,7 @@ function PurchaseCourseCard({ course, progress, totalLessons, completedLessons }
                 </div>
 
                 {/* دکمه ادامه */}
-                <Button render={<Link href={`/courses/${course.id}`} />} className="mt-1 w-full">
+                <Button render={<Link href={`/courses/${course.id}`} />} className="mt-1 w-full dark:bg-primary/10">
                     <HugeiconsIcon icon={PlayCircleIcon} className="size-5" />
                     {isCompleted ? "مشاهده دوره" : "ادامه دوره"}
                 </Button>

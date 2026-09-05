@@ -1,6 +1,7 @@
 import Navbar from "@/components/custom/navbar/navbar";
 
 import { getCartCount } from "@/actions/cart";
+import MobileFooter from "@/components/custom/mobile-footer";
 
 type DashboardLayoutProps = {
     children: React.ReactNode;
@@ -14,6 +15,8 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
             <Navbar cartCount={cartCount} />
 
             <main className="flex-1">{children}</main>
+
+            <MobileFooter />
         </div>
     );
 }

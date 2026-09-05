@@ -57,8 +57,8 @@ function CoursesToolbar({ filters, bounds, count }: CoursesToolbarProps) {
                                     size="sm"
                                     variant={active ? "default" : "ghost"}
                                     className={cn(
-                                        "h-8 rounded-lg px-2.5 text-xs font-medium md:px-4 md:text-sm",
-                                        !active && "text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white",
+                                        "h-8 rounded-lg px-2.5 text-xs font-medium md:px-4 md:text-sm dark:bg-primary/10",
+                                        !active && "text-gray-600 hover:text-gray-800 dark:bg-transparent dark:text-gray-300 dark:hover:text-white",
                                     )}
                                     onClick={() => setSort(option.value)}
                                 >

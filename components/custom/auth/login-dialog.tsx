@@ -31,7 +31,7 @@ function LoginDialog({ variant = "navbar" }: LoginDialogProps) {
                             size="sm"
                             className="flex h-auto flex-col items-center gap-1 p-0 text-xs font-medium text-gray-500 hover:bg-transparent hover:text-primary"
                         >
-                            <HugeiconsIcon icon={UserIcon} className="size-6" />
+                            <HugeiconsIcon icon={LogIn} className="size-6 rotate-180" />
                             ورود
                         </Button>
                     )

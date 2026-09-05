@@ -75,7 +75,7 @@ function SettingsForm() {
                 </div>
             </Card>
 
-            <Button size="lg" onClick={handleSave}>
+            <Button size="lg" onClick={handleSave} className="dark:bg-primary/10">
                 ذخیره تغییرات
             </Button>
         </div>

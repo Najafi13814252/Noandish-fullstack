@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Show, UserButton } from "@clerk/nextjs";
-import { BookOpen01Icon, Home01Icon, ShoppingBag03Icon } from "@hugeicons/core-free-icons";
+import { Show } from "@clerk/nextjs";
+import { BookOpen01Icon, Home01Icon, ShoppingBag03Icon, User } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { cn } from "@/lib/utils";
@@ -28,7 +28,7 @@ function MobileFooter() {
                 خانه
             </Link>
 
-            <Link href="/courses/1" className={tabClass(pathname.startsWith("/courses"))}>
+            <Link href="/courses" className={tabClass(pathname.startsWith("/courses"))}>
                 <HugeiconsIcon icon={BookOpen01Icon} className="size-6" />
                 دوره‌ها
             </Link>
@@ -41,10 +41,10 @@ function MobileFooter() {
             </Link>
 
             <Show when="signed-in">
-                <div className="flex flex-col items-center gap-1 text-xs font-medium text-gray-500">
-                    <UserButton />
-                    حساب
-                </div>
+                <Link href="/user/profile/favorites" className={tabClass(pathname.startsWith("/user/profile/favorites"))}>
+                    <HugeiconsIcon icon={User} className="size-6" />
+                    پروفایل
+                </Link>
             </Show>
 
             <Show when="signed-out">

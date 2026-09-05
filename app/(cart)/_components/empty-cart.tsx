@@ -22,7 +22,7 @@ function EmptyCart() {
       </div>
 
       <Link href="/">
-        <Button size="lg">
+        <Button size="lg" className="dark:bg-primary/10">
           مشاهده دوره‌ها
           <HugeiconsIcon icon={ArrowLeft02Icon} className="size-5" />
         </Button>
